@@ -3,10 +3,12 @@ const ticketTitle = document.querySelector('#ticket-title');
 const ticketEyebrow = document.querySelector('#ticket-eyebrow');
 const ticketLead = document.querySelector('#ticket-lead');
 const ticketReference = ticketDetail.dataset.ticketReference;
+const ticketCode = new URLSearchParams(location.search).get('code');
 
 async function loadTicket() {
   try {
-    const response = await fetch(`/api/tickets/${encodeURIComponent(ticketReference)}`);
+    const codeQuery = ticketCode ? `?code=${encodeURIComponent(ticketCode)}` : '';
+    const response = await fetch(`/api/tickets/${encodeURIComponent(ticketReference)}${codeQuery}`);
     const ticket = await response.json();
     if (!response.ok) throw new Error(ticket.error || '문의 정보를 불러오지 못했습니다.');
 

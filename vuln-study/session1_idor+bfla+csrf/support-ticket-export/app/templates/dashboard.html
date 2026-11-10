@@ -20,7 +20,7 @@
   <section class="card content-section" id="tickets">
     <h2>내 문의</h2>
     {% for ticket in tickets %}
-      <a class="ticket" href="{{ url_for('ticket_page', ticket_reference=ticket['reference']) }}">
+      <a class="ticket" href="{{ ticket['detail_url'] }}">
         <span>#{{ ticket['display_number'] }}</span>
         <strong>{{ ticket['title'] }}</strong>
         <small>{{ ticket['status_label'] }}</small>

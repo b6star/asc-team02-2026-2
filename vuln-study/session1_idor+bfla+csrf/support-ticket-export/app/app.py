@@ -413,7 +413,7 @@ def init_db():
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
             (
-                1001, "2611101110-seed00", "배송지 변경 문의", "closed",
+                1001, "CS-261110-07238-seed00", "배송지 변경 문의", "closed",
                 "2026년 11월 10일 오후 2:37", "고객지원팀", "주문한 상품의 배송지를 이전 주소에서 새 주소로 변경하고 싶습니다.",
                 100, "public", "normal", 5001, 1,
             ),
@@ -426,13 +426,13 @@ def init_db():
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
             (
-                7231, "2611011081-d91a77", "운영 환경 인증 정보 백업", "closed",
+                7231, "CS-261101-07209-d91a77", "운영 환경 인증 정보 백업", "closed",
                 "2026년 11월 1일 오후 12:37", "운영 관리자", "운영 환경 백업 파일 보관 요청",
                 1, "internal", "internal", 9182, 1,
             ),
         )
         db.execute(
-            """UPDATE tickets SET reference = '2611101110-seed00', title = '배송지 변경 문의', status = 'closed',
+            """UPDATE tickets SET reference = 'CS-261110-07238-seed00', title = '배송지 변경 문의', status = 'closed',
                opened_at = '2026년 11월 10일 오후 2:37', claimed_by = '고객지원팀',
                body = '주문한 상품의 배송지를 이전 주소에서 새 주소로 변경하고 싶습니다.' WHERE id = 1001"""
         )
@@ -458,14 +458,14 @@ def init_db():
             "안녕하세요 고객님,\n파손된 상품으로 불편을 드려 죄송합니다. 첨부해 주신 사진을 확인했으며 전액 환불과 상품 회수를 접수했습니다.\n감사합니다.",
             "안녕하세요 고객님,\n재입고 알림 신청 상태를 다시 등록했습니다. 상품이 입고되면 앱 알림과 이메일로 안내드리겠습니다.\n감사합니다.",
         )
-        # 공개 문의 번호는 1081부터 1111까지만 사용합니다.
+        # 공개 문의 번호는 07209부터 07239까지만 사용합니다.
         db.execute("DELETE FROM export_jobs")
         db.execute("DELETE FROM tickets WHERE id BETWEEN 7160 AND 7200")
         db.execute("DELETE FROM attachments WHERE id BETWEEN 107160 AND 107200")
         fake_ticket_ids = list(range(7201, 7230))
         ordered_ticket_ids = [7231] + list(range(7201, 7229)) + [1001, 7229]
         public_tid_by_id = {
-            ticket_id: 1081 + index
+            ticket_id: 7209 + index
             for index, ticket_id in enumerate(ordered_ticket_ids)
         }
         order_by_id = {
@@ -476,9 +476,9 @@ def init_db():
             ordered_index = order_by_id[ticket_id]
             date = (
                 datetime(2026, 11, 11)
-                if public_tid == 1111
+                if public_tid == 7239
                 else datetime(2026, 11, 1)
-                + timedelta(days=((public_tid - 1081) * 9 + 14) // 29)
+                + timedelta(days=((public_tid - 7209) * 9 + 14) // 29)
             )
             image_variant = index % len(fake_topics)
             title, body, filename = fake_topics[image_variant]
@@ -521,7 +521,7 @@ def init_db():
                 """,
                 (
                     ticket_id,
-                    f"{date:%y%m%d}{public_tid:04d}-{suffix}",
+                    f"CS-{date:%y%m%d}-{public_tid:05d}-{suffix}",
                     title,
                     status,
                     f"{date.year}년 {date.month}월 {date.day}일 {period} "
@@ -538,7 +538,7 @@ def init_db():
                        claimed_by = ?, body = ?, owner_id = ?, attachment_id = ?
                    WHERE id = ?""",
                 (
-                    f"{date:%y%m%d}{public_tid:04d}-{suffix}", title, status,
+                    f"CS-{date:%y%m%d}-{public_tid:05d}-{suffix}", title, status,
                     f"{date.year}년 {date.month}월 {date.day}일 {period} "
                     f"{display_hour}:{minute:02d}",
                     None if status == "waiting" else "고객지원팀",
@@ -551,7 +551,7 @@ def init_db():
             )
         db.execute(
             """UPDATE tickets
-               SET reference = '261111' || substr(reference, 7),
+               SET reference = 'CS-261111-' || substr(reference, 11),
                    title = '11월 11일 빼빼로데이 이벤트 문의',
                    opened_at = '2026년 11월 11일 오전 11:11',
                    body = '오늘이 무슨 날이게요~? 11월 11일 빼빼로데이잖아요, 기념 이벤트나 쿠폰은 따로 없나요? 11월 11일 오늘 집에서 빼빼로 261111개째 먹으면서 이벤트 기다리고 있습니다.',
@@ -598,15 +598,15 @@ def init_db():
         )
         db.execute("DELETE FROM attachments WHERE id IN (107210, 107220)")
         db.execute(
-            """UPDATE tickets SET reference = '2611011081-d91a77',
+            """UPDATE tickets SET reference = 'CS-261101-07209-d91a77',
                title = '운영 환경 인증 정보 백업', status = 'closed', owner_id = 204,
                opened_at = '2026년 11월 1일 오후 12:37', claimed_by = 'security01',
                body = '운영 환경 백업 파일 보관 요청',
                answer = '요청한 운영 환경 인증 정보 백업 파일의 보관을 완료했습니다.\n외부 공유가 필요한 경우 관리자 승인 후 공유 링크를 생성해 주세요.'
                WHERE id = 7231"""
         )
-        # 1110번은 11월 10일에 등록된 일반 고객 문의입니다.
-        ticket_1110_suffix = f"{(1110 * 2654435761) & 0xFFFFFF:06x}"
+        # 07238번은 11월 10일에 등록된 일반 고객 문의입니다.
+        ticket_7238_suffix = f"{(7238 * 2654435761) & 0xFFFFFF:06x}"
         db.execute(
             """UPDATE tickets
                SET reference = ?, title = '배송지 변경 문의', status = 'closed',
@@ -615,12 +615,12 @@ def init_db():
                    answer = '안녕하세요 고객님,\n상품이 아직 출고 전인 것으로 확인되어 요청하신 새 주소로 배송지를 변경했습니다. 주문 상세 화면에서 변경된 배송지를 확인해 주세요.\n감사합니다.',
                    owner_id = 100
                WHERE id = 1001""",
-            (f"2611101110-{ticket_1110_suffix}",),
+            (f"CS-261110-07238-{ticket_7238_suffix}",),
         )
         db.execute(
             """UPDATE tickets
                SET status = 'waiting', answer = NULL
-               WHERE substr(reference, 1, 6) > '261110'"""
+               WHERE substr(reference, 4, 6) > '261110'"""
         )
         pepero = db.execute(
             """SELECT tickets.title, tickets.status, tickets.opened_at, tickets.claimed_by,
@@ -650,18 +650,29 @@ def init_db():
         ).hexdigest()[:6]
         db.execute(
             "UPDATE tickets SET reference = ? WHERE id = 7229",
-            (f"2611111111-{response_hash}",),
+            (f"CS-261111-07239-{response_hash}",),
         )
 
 
 def display_ticket_number(reference):
-    """공개 참조값에서 날짜를 제외한 TID와 suffix를 표시합니다."""
-    return reference[6:].replace("-", "")
+    """확인 코드를 제외한 공개 문의번호를 표시합니다."""
+    matched = re.fullmatch(
+        r"(CS-\d{6}-\d{5})(?:-([A-Za-z0-9]{1,32}))?", reference
+    )
+    return matched.group(1) if matched else reference
+
+
+def ticket_code(reference):
+    """공개 문의 링크에 사용하는 확인 코드를 반환합니다."""
+    matched = re.fullmatch(
+        r"CS-\d{6}-\d{5}(?:-([A-Za-z0-9]{1,32}))?", reference
+    )
+    return matched.group(1) if matched and matched.group(1) else None
 
 
 def find_ticket_by_reference(db, reference):
-    """취약점: suffix를 선택값으로 취급하고 YYMMDDTID 10자리만 비교합니다."""
-    matched = re.fullmatch(r"(\d{10})(?:-[A-Za-z0-9]{1,32})?", reference)
+    """취약점: code와 Ticket 소유권을 검사하지 않습니다."""
+    matched = re.fullmatch(r"(CS-\d{6}-\d{5})", reference)
     if not matched:
         return None
     return db.execute(
@@ -672,7 +683,7 @@ def find_ticket_by_reference(db, reference):
            FROM tickets
            JOIN users ON users.id = tickets.owner_id
            LEFT JOIN attachments ON attachments.id = tickets.attachment_id
-           WHERE substr(tickets.reference, 1, 10) = ?""",
+           WHERE substr(tickets.reference, 1, 15) = ?""",
         (matched.group(1),),
     ).fetchone()
 
@@ -784,13 +795,18 @@ def dashboard():
     with get_db() as db:
         ticket_rows = db.execute(
             """SELECT reference, title, status FROM tickets
-               WHERE owner_id = ? ORDER BY substr(reference, 1, 10) DESC""",
+               WHERE owner_id = ? ORDER BY reference DESC""",
             (user["id"],),
         ).fetchall()
     tickets = [
         {
             **dict(ticket),
             "display_number": display_ticket_number(ticket["reference"]),
+            "detail_url": url_for(
+                "ticket_page",
+                ticket_reference=display_ticket_number(ticket["reference"]),
+                code=ticket_code(ticket["reference"]),
+            ),
             "status_label": "답변 대기" if ticket["status"] == "waiting" else "처리 완료",
         }
         for ticket in ticket_rows
@@ -827,7 +843,7 @@ def notifications(websocket):
     with get_db() as db:
         tickets = db.execute(
             """SELECT reference, title FROM tickets
-               WHERE owner_id = ? ORDER BY substr(reference, 1, 10) DESC LIMIT 2""",
+               WHERE owner_id = ? ORDER BY reference DESC LIMIT 2""",
             (user["id"],),
         ).fetchall()
     for ticket in tickets:
@@ -847,7 +863,7 @@ def notifications(websocket):
 @app.get("/api/tickets/<ticket_reference>")
 @login_required
 def get_ticket(ticket_reference):
-    """취약점: suffix와 Ticket 소유권을 검사하지 않습니다."""
+    """취약점: 확인 코드와 Ticket 소유권을 검사하지 않습니다."""
     with get_db() as db:
         ticket = find_ticket_by_reference(db, ticket_reference)
     if not ticket:
@@ -890,9 +906,11 @@ def create_ticket():
     now = datetime.now(ZoneInfo("Asia/Seoul"))
     with get_db() as db:
         last_tid = db.execute(
-            "SELECT MAX(CAST(substr(reference, 7, 4) AS INTEGER)) FROM tickets"
-        ).fetchone()[0] or 7000
-        ticket_reference = f"{now:%y%m%d}{last_tid + 1:04d}-{secrets.token_hex(3)}"
+            "SELECT MAX(CAST(substr(reference, 11, 5) AS INTEGER)) FROM tickets"
+        ).fetchone()[0] or 7208
+        ticket_reference = (
+            f"CS-{now:%y%m%d}-{last_tid + 1:05d}-{secrets.token_hex(3)}"
+        )
         attachment = db.execute(
             """
             INSERT INTO attachments
@@ -1085,7 +1103,7 @@ def shared_export(token):
     if not job:
         return "Shared export not found", 404
     body = (
-        f"Ticket #{job['ticket_reference'][6:10]} export\n\n"
+        f"Ticket #{display_ticket_number(job['ticket_reference'])} export\n\n"
         f"Attachment: {job['filename']}\n"
         f"{job['content']}"
     )

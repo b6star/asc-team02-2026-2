@@ -26,7 +26,7 @@ def test_full_vulnerability_chain(client):
     assert login_customer(client).status_code == 302
 
     # IDOR: 일반 사용자가 내부 Ticket 메타데이터를 조회합니다.
-    ticket = client.get("/api/tickets/2611011081")
+    ticket = client.get("/api/tickets/CS-261101-07209?code=anything")
     assert ticket.status_code == 200
     assert ticket.get_json()["attachmentId"] == "a8f2c19e"
 

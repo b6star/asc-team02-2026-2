@@ -20,7 +20,7 @@ services:
   storage:
     build: ./attachment-storage
     environment:
-      BOT_BASE: http://gateway:8081
+      BOT_BASE: http://gateway:8080
     healthcheck:
       test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:5001/health')"]
       interval: 5s
@@ -31,7 +31,7 @@ services:
     build: ./bot
     environment:
       APP_BASE: http://gateway:8080
-      ALLOWED_FILE_ORIGIN: http://gateway:8081
+      ALLOWED_FILE_ORIGIN: http://gateway:8080
       ADMIN_BOT_TOKEN: local-admin-bot-token
     depends_on:
       app:

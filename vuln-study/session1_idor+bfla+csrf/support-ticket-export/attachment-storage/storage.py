@@ -8,7 +8,7 @@ from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 files = {}
-BOT_BASE = os.getenv("BOT_BASE", "http://gateway:8081")
+BOT_BASE = os.getenv("BOT_BASE", "http://gateway:8080")
 MAX_ATTACHMENT_BYTES = 5 * 1024 * 1024
 
 

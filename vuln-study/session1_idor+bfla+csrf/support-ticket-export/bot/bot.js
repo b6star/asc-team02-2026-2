@@ -6,7 +6,7 @@ const app = express();
 app.use(express.json());
 
 const APP_BASE = process.env.APP_BASE ?? 'http://gateway:8080';
-const ALLOWED_FILE_ORIGIN = process.env.ALLOWED_FILE_ORIGIN ?? 'http://gateway:8081';
+const ALLOWED_FILE_ORIGIN = process.env.ALLOWED_FILE_ORIGIN ?? 'http://gateway:8080';
 const ADMIN_BOT_TOKEN = process.env.ADMIN_BOT_TOKEN ?? 'local-admin-bot-token';
 
 let visiting = false;

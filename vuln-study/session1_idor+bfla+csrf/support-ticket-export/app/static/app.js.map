@@ -1,0 +1,8 @@
+{
+  "version": 3,
+  "file": "app.js",
+  "sources": ["dashboard.js", "admin-ticket.js"],
+  "names": ["createExport", "shareExport", "attachmentId", "jobId"],
+  "mappings": ""
+}
+

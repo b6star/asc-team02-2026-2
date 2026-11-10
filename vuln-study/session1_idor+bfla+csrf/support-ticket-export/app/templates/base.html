@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}고객 지원 센터{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css', v=2) }}">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/">◉ HELPDESK<span class="brand-mark">.</span></a>
+    <nav class="top-links"><a href="/#new-ticket">문의 접수</a><a href="/#tickets">내 문의</a>
+    {% if session.get('user_id') %}<form action="/logout" method="post"><button class="link-button">로그아웃</button></form>{% endif %}
+    </nav>
+  </header>
+  <main class="layout {% if request.endpoint == 'login' %}login-layout{% endif %}">
+    {% if request.endpoint != 'login' %}<aside class="sidebar"><strong>고객 지원 센터</strong><a href="/#overview">이용 안내</a><a href="/#new-ticket">문의 접수</a><a href="/#tickets">내 문의</a><a href="/#updates">문의 등록 내역</a></aside>{% endif %}
+    <article class="article">{% block content %}{% endblock %}</article>
+    {% if request.endpoint != 'login' %}<aside class="toc"><strong>계정 정보</strong><p>로그인 계정<br><b>{{ user['username'] if user else '-' }}</b></p><p>등록된 문의<br><b>{{ ticket_count if ticket_count is defined else 0 }}건</b></p></aside>{% endif %}
+  </main>
+</body>
+</html>
+

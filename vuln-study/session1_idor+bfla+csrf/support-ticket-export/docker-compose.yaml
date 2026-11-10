@@ -1,0 +1,54 @@
+services:
+  app:
+    build: ./app
+    environment:
+      FLAG: ASC{n0_d1r3ct_4cc3ss_n0_pr0bl3m_l3t_4dm1n_sh4r3_1t}
+      SECRET_KEY: local-development-secret
+      ADMIN_BOT_TOKEN: local-admin-bot-token
+      BOT_URL: http://bot:3000
+      STORAGE_URL: http://storage:5001
+      DATABASE_PATH: /data/support.db
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:5000/health')"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    depends_on:
+      storage:
+        condition: service_healthy
+
+  storage:
+    build: ./attachment-storage
+    environment:
+      BOT_BASE: http://gateway:8081
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:5001/health')"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  bot:
+    build: ./bot
+    environment:
+      APP_BASE: http://gateway:8080
+      ALLOWED_FILE_ORIGIN: http://gateway:8081
+      ADMIN_BOT_TOKEN: local-admin-bot-token
+    depends_on:
+      app:
+        condition: service_healthy
+      storage:
+        condition: service_healthy
+
+  gateway:
+    image: nginx:1.27-alpine
+    volumes:
+      - ./gateway/nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - "18080:8080"
+    depends_on:
+      app:
+        condition: service_healthy
+      storage:
+        condition: service_healthy
+
+

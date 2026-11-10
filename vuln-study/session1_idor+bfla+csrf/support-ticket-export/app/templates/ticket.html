@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}문의 상세 | 고객 지원 센터{% endblock %}
+{% block content %}
+<div class="breadcrumbs"><a href="/#tickets">고객 지원 센터</a> <span>›</span> 문의 상세</div>
+<section>
+  <p class="eyebrow" id="ticket-eyebrow">내 문의</p>
+  <h1 id="ticket-title">문의 정보를 불러오는 중입니다.</h1>
+  <p class="lead" id="ticket-lead">접수한 문의의 내용과 처리 상태를 확인할 수 있습니다.</p>
+</section>
+
+<section class="card content-section">
+  <div id="ticket-detail" class="detail-box muted" data-ticket-reference="{{ ticket_reference }}">
+    문의 정보를 불러오는 중입니다.
+  </div>
+</section>
+
+<script src="{{ url_for('static', filename='ticket.js', v=1) }}"></script>
+{% endblock %}

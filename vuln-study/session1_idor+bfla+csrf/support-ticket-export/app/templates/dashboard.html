@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}내 문의 | 고객 지원 센터{% endblock %}
+{% block content %}
+<div class="breadcrumbs">고객 지원 센터 <span>›</span> 내 문의</div>
+<section id="overview"><p class="eyebrow">고객 지원</p><h1>무엇을 도와드릴까요?</h1><p class="lead">새 문의를 등록하거나 기존 문의의 처리 상태를 확인할 수 있습니다.</p></section>
+
+<div class="dashboard-list">
+  <section class="card content-section" id="new-ticket">
+    <h2>문의 접수</h2>
+    <p class="muted">문의 내용과 확인이 필요한 이미지를 함께 등록할 수 있습니다.</p>
+    <form id="create-ticket-form" class="stack">
+      <label>제목<input name="title" maxlength="120" required></label>
+      <label>문의 내용<textarea name="body" rows="5" maxlength="2000" required></textarea></label>
+      <label>이미지 첨부 <small>PNG, JPG, GIF, WEBP, SVG</small><input name="file" type="file" accept=".png,.jpg,.jpeg,.gif,.webp,.svg,image/png,image/jpeg,image/gif,image/webp,image/svg+xml" required></label>
+      <button class="primary" type="submit">문의 접수</button>
+    </form>
+    <div id="create-ticket-result" class="result-message" aria-live="polite"></div>
+  </section>
+
+  <section class="card content-section" id="tickets">
+    <h2>내 문의</h2>
+    {% for ticket in tickets %}
+      <a class="ticket" href="{{ url_for('ticket_page', ticket_reference=ticket['reference']) }}">
+        <span>#{{ ticket['display_number'] }}</span>
+        <strong>{{ ticket['title'] }}</strong>
+        <small>{{ ticket['status_label'] }}</small>
+      </a>
+    {% endfor %}
+  </section>
+
+  <section class="card content-section" id="updates">
+    <h2>문의 등록 내역</h2>
+    <p class="muted">현재 계정으로 등록한 문의입니다.</p>
+    <div id="notifications" class="notification-list"><p class="muted">문의 정보를 불러오고 있습니다.</p></div>
+  </section>
+
+</div>
+
+<script src="{{ url_for('static', filename='app.js', v=2) }}"></script>
+{% endblock %}
+

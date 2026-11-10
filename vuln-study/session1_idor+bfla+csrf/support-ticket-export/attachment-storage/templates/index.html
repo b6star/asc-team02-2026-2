@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>첨부파일 보관함</title>
+  <style>
+    :root { color-scheme: light; font-family: Inter, Pretendard, "Noto Sans KR", system-ui, sans-serif; background: #fff; color: #171b2c; }
+    * { box-sizing: border-box; } body { margin: 0; }
+    header { height: 82px; border-bottom: 1px solid #e9ebef; display:flex; align-items:center; justify-content:space-between; padding:0 max(5vw, calc((100vw - 1360px)/2)); }
+    header strong { font-size:1.35rem; letter-spacing:-.05em; } header span { color:#4d73f6; }
+    header nav { display:flex; gap:30px; color:#60697c; }
+    main { width: min(1200px, 92vw); margin: 52px auto; display:grid; grid-template-columns: 190px minmax(0,1fr) 150px; gap:42px; }
+    aside { color:#8b93a2; line-height:2.3; font-size:.92rem; position:sticky; top:28px; align-self:start; } aside strong { color:#202638; display:block; margin-bottom:12px; }
+    article { min-width:0; } .crumb { color:#9aa2b2; font-size:.9rem; margin-bottom:38px; }
+    .eyebrow { color:#4d73f6; font-weight:800; letter-spacing:.1em; font-size:.8rem; }
+    h1 { font-size:clamp(2rem,4vw,2.8rem); letter-spacing:-.05em; margin:10px 0 18px; }
+    p { color:#596174; line-height:1.8; }
+    .panel { border:1px solid #e7eaf0; border-radius:14px; padding:24px; margin-top:28px; box-shadow:0 8px 25px #1f2a4408; }
+    .upload-box { display:block; padding:46px 24px; border:2px dashed #d7ddea; border-radius:12px; background:#fafbfc; text-align:center; color:#596174; cursor:pointer; }
+    .upload-box input { display:block; width:min(420px,100%); margin:16px auto 0; }
+    button { margin-top:12px; padding:12px 18px; background:#4d73f6; color:white; border:0; border-radius:8px; font-weight:750; cursor:pointer; }
+    .result { display:none; margin-top:18px; padding:18px; background:#f7f8fa; border:1px solid #e9ecf1; border-radius:9px; color:#374056; }
+    .result.visible { display:block; }.result strong { display:block; margin-bottom:10px; }.url-row { display:grid; grid-template-columns:140px 1fr; gap:8px; padding:5px 0; }.url-row a { color:#4d73f6; overflow-wrap:anywhere; }
+    .error { color:#c83248; }
+    @media(max-width:850px){ main{grid-template-columns:1fr;} aside{display:none;} header nav{display:none;} }
+  </style>
+</head>
+<body>
+<main>
+  <aside><strong>파일 보관함</strong>파일 업로드<br>최근 파일<br>이용 안내</aside>
+  <article>
+    <div class="crumb">서비스 <span>›</span> 첨부파일 보관함</div>
+    <p class="eyebrow">FILE STORAGE</p>
+    <h1>첨부파일 업로드</h1>
+    <p>문의에 첨부할 이미지를 선택할 수 있습니다.</p>
+  <section class="panel">
+    <p>검토할 이미지를 선택하세요. PNG, JPG, GIF, WEBP, SVG 형식을 최대 20KB까지 업로드할 수 있습니다.</p>
+    <form id="file-form">
+      <label class="upload-box">이미지 첨부파일 선택
+        <input name="file" type="file" accept=".png,.jpg,.jpeg,.gif,.webp,.svg,image/png,image/jpeg,image/gif,image/webp,image/svg+xml" required>
+      </label>
+      <button type="submit">파일 업로드</button>
+    </form>
+    <div id="result" class="result" aria-live="polite"></div>
+  </section></article>
+  <aside><strong>보관 안내</strong>허용 형식<br><b>PNG · JPG · GIF<br>WEBP · SVG</b><br><br>최대 크기<br><b>20KB</b></aside>
+</main>
+<script>
+document.querySelector('#file-form').addEventListener('submit', async (event) => {
+  event.preventDefault();
+  const resultBox = document.querySelector('#result');
+  resultBox.className = 'result visible';
+  resultBox.textContent = '파일을 업로드하는 중입니다.';
+  const response = await fetch('/api/files', {
+    method: 'POST',
+    body: new FormData(event.currentTarget),
+  });
+  const result = await response.json();
+  if (!response.ok) {
+    resultBox.className = 'result visible error';
+    resultBox.textContent = result.error || '파일을 업로드하지 못했습니다.';
+    return;
+  }
+  resultBox.replaceChildren();
+  const heading = document.createElement('strong');
+  heading.textContent = `${result.filename} 업로드 완료`;
+  resultBox.append(heading);
+  for (const [label, url] of [['미리보기 주소', result.previewUrl], ['검토 요청용 주소', result.reviewUrl]]) {
+    const row = document.createElement('div');
+    row.className = 'url-row';
+    const name = document.createElement('span');
+    name.textContent = label;
+    const link = document.createElement('a');
+    link.href = url;
+    link.textContent = url;
+    if (label === '미리보기 주소') link.target = '_blank';
+    row.append(name, link);
+    resultBox.append(row);
+  }
+});
+</script>
+</body>
+</html>
+

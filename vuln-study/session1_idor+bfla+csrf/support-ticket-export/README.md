@@ -47,17 +47,19 @@ sudo docker compose down
    │
    ▼
 gateway:8080 ──▶ app:5000
-                    │
-                    ├──▶ storage:5001
-                    └──▶ bot:3000
+      │             │
+      │             ├──▶ storage:5001
+      │             └──▶ bot:3000
+      │
+      └── /files/* ──▶ storage:5001
 
-bot ──▶ gateway:8081 ──▶ storage:5001
+bot ──▶ gateway:8080/files/* ──▶ storage:5001
 ```
 
 - `app`: Flask 고객지원 애플리케이션과 SQLite 데이터베이스
 - `storage`: PNG, JPG, GIF, WEBP, SVG 첨부파일 저장소
 - `bot`: 첨부파일을 확인하는 Playwright 관리자 브라우저
-- `gateway`: 고객 서비스와 내부 첨부파일 Origin을 분리하는 Nginx
+- `gateway`: 하나의 Origin에서 고객 서비스와 첨부파일 경로를 분기하는 Nginx
 
 참가자에게 노출되는 포트는 `18080` 하나입니다. 첨부파일은 최대 5MB까지 업로드할 수 있습니다.
 
@@ -125,7 +127,7 @@ GET /api/tickets/<ticket_reference>
 
 ### 3. BFLA
 
-`app.js.map`에는 `createExport`, `shareExport`, `attachmentId`, `jobId` 이름과 사내 프런트엔드 파일의 흔적이 남아 있습니다. 실제 번들인 `app.js`에서 관리자 Export API의 경로와 HTTP Method를 확인할 수 있습니다.
+`app.js`에서는 관리자 API 경로가 여러 문자열 조각으로 나뉘어 있습니다. 내부 티켓의 디버그 파일 단서를 따라 `/static/app.js.map`을 확인하면 `sourcesContent`에서 `createExport`, `shareExport`의 원본 코드와 API 경로, HTTP Method를 확인할 수 있습니다.
 
 ```http
 POST /api/admin/attachments/<attachment_id>/exports

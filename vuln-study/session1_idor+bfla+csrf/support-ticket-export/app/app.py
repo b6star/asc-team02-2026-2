@@ -226,7 +226,7 @@ def make_sample_png(seed=0, variant=0):
     )
 
 
-SAMPLE_PNG = make_sample_png(1110, 0)
+SAMPLE_PNG = make_sample_png(7238, 0)
 
 app = Flask(__name__)
 app.config.update(
@@ -492,7 +492,7 @@ def init_db():
             period = "오전" if hour < 12 else "오후"
             display_hour = (hour - 1) % 12 + 1
             status = "waiting" if public_tid % 11 == 0 else "closed"
-            suffix = f"{(public_tid * 2654435761) & 0xFFFFFF:06x}"
+            confirmation_code = f"{(public_tid * 2654435761) & 0xFFFFFF:06x}"
             has_attachment = ticket_id == 7229 or public_tid % 2 == 0
             attachment_id = 100_000 + ticket_id if has_attachment else 5000
             owner_id = 2 if ticket_id == 7229 else 100 + index % len(fake_customers)
@@ -525,7 +525,7 @@ def init_db():
                 """,
                 (
                     ticket_id,
-                    f"CS-{date:%y%m%d}-{public_tid:05d}-{suffix}",
+                    f"CS-{date:%y%m%d}-{public_tid:05d}-{confirmation_code}",
                     title,
                     status,
                     f"{date.year}년 {date.month}월 {date.day}일 {period} "
@@ -542,7 +542,7 @@ def init_db():
                        claimed_by = ?, body = ?, owner_id = ?, attachment_id = ?
                    WHERE id = ?""",
                 (
-                    f"CS-{date:%y%m%d}-{public_tid:05d}-{suffix}", title, status,
+                    f"CS-{date:%y%m%d}-{public_tid:05d}-{confirmation_code}", title, status,
                     f"{date.year}년 {date.month}월 {date.day}일 {period} "
                     f"{display_hour}:{minute:02d}",
                     None if status == "waiting" else "고객지원팀",
@@ -610,7 +610,7 @@ def init_db():
                WHERE id = 7231"""
         )
         # 07238번은 11월 10일에 등록된 일반 고객 문의입니다.
-        ticket_7238_suffix = f"{(7238 * 2654435761) & 0xFFFFFF:06x}"
+        ticket_7238_code = f"{(7238 * 2654435761) & 0xFFFFFF:06x}"
         db.execute(
             """UPDATE tickets
                SET reference = ?, title = '배송지 변경 문의', status = 'closed', exportable = 0,
@@ -619,7 +619,7 @@ def init_db():
                    answer = '안녕하세요 고객님,\n상품이 아직 출고 전인 것으로 확인되어 요청하신 새 주소로 배송지를 변경했습니다. 주문 상세 화면에서 변경된 배송지를 확인해 주세요.\n감사합니다.',
                    owner_id = 100
                WHERE id = 1001""",
-            (f"CS-261110-07238-{ticket_7238_suffix}",),
+            (f"CS-261110-07238-{ticket_7238_code}",),
         )
         db.execute(
             """UPDATE tickets

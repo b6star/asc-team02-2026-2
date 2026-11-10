@@ -111,8 +111,12 @@ def make_sample_png(seed=0, variant=0):
         "ORDER TRACKING", "RETURN REQUEST", "WRONG ITEM", "COUPON ERROR",
         "PAYMENT STATUS", "ADDRESS CHANGE", "DAMAGE REPORT", "RESTOCK ALERT",
     )
+    page_subtitles = (
+        "DELIVERY DETAILS", "REQUEST DETAILS", "ITEM COMPARISON", "COUPON DETAILS",
+        "PAYMENT DETAILS", "ADDRESS DETAILS", "DAMAGE DETAILS", "ALERT SETTINGS",
+    )
     draw_text(166, 72, page_titles[variant % len(page_titles)], (39, 48, 70), 3)
-    draw_text(166, 99, f"TICKET #{seed}", (143, 154, 175), 1)
+    draw_text(166, 99, page_subtitles[variant % len(page_subtitles)], (143, 154, 175), 1)
 
     if variant == 0:  # 로그인/비밀번호 화면
         rect(245, 125, 535, 326, (255, 255, 255))

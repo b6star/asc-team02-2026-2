@@ -494,7 +494,7 @@ def init_db():
             owner_id = 2 if ticket_id == 7229 else 100 + index % len(fake_customers)
             attachment_reference = f"{(ticket_id * 2246822519) & 0xFFFFFFFF:08x}"
             if has_attachment:
-                sample_content = make_sample_png(ticket_id, image_variant)
+                sample_content = make_sample_png(public_tid, image_variant)
                 db.execute(
                     """
                     INSERT OR IGNORE INTO attachments

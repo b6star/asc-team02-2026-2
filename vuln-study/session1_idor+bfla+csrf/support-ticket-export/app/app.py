@@ -415,7 +415,7 @@ def init_db():
             (
                 1001, "CS-261110-07238-seed00", "배송지 변경 문의", "closed",
                 "2026년 11월 10일 오후 2:37", "고객지원팀", "주문한 상품의 배송지를 이전 주소에서 새 주소로 변경하고 싶습니다.",
-                100, "public", "normal", 5001, 1,
+                100, "public", "normal", 5001, 0,
             ),
         )
         db.execute(
@@ -432,7 +432,7 @@ def init_db():
             ),
         )
         db.execute(
-            """UPDATE tickets SET reference = 'CS-261110-07238-seed00', title = '배송지 변경 문의', status = 'closed',
+            """UPDATE tickets SET reference = 'CS-261110-07238-seed00', title = '배송지 변경 문의', status = 'closed', exportable = 0,
                opened_at = '2026년 11월 10일 오후 2:37', claimed_by = '고객지원팀',
                body = '주문한 상품의 배송지를 이전 주소에서 새 주소로 변경하고 싶습니다.' WHERE id = 1001"""
         )
@@ -609,7 +609,7 @@ def init_db():
         ticket_7238_suffix = f"{(7238 * 2654435761) & 0xFFFFFF:06x}"
         db.execute(
             """UPDATE tickets
-               SET reference = ?, title = '배송지 변경 문의', status = 'closed',
+               SET reference = ?, title = '배송지 변경 문의', status = 'closed', exportable = 0,
                    opened_at = '2026년 11월 10일 오후 2:37', claimed_by = '고객지원팀',
                    body = '주문한 상품이 아직 출고 전인데 배송지를 이전 주소에서 새 주소로 변경하고 싶습니다.',
                    answer = '안녕하세요 고객님,\n상품이 아직 출고 전인 것으로 확인되어 요청하신 새 주소로 배송지를 변경했습니다. 주문 상세 화면에서 변경된 배송지를 확인해 주세요.\n감사합니다.',

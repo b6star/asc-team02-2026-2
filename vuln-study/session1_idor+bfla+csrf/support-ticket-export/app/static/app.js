@@ -62,8 +62,22 @@ window.addEventListener('scroll', updateActiveSection, { passive: true });
 window.addEventListener('resize', updateActiveSection);
 updateActiveSection();
 
-async function _0x4e21(t){return fetch("/api/admin/attachments/"+t+"/exports",{method:"POST"})}
-async function _0x7a11(t){return fetch("/api/admin/exports/"+t+"/share",{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded"},body:"enabled=true"})}
+const _a = ['/api', '/admin', '/attachments'];
+const _b = ['/exports'];
+const _c = ['/api', '/admin', '/exports'];
+const _d = ['/share'];
 
-//# sourceMappingURL=app.js.map
+async function _0x4e21(t) {
+  return fetch(_a.join('') + '/' + t + _b[0], {
+    method: 'POST',
+  });
+}
+
+async function _0x7a11(t) {
+  return fetch(_c.join('') + '/' + t + _d[0], {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: 'enabled=true',
+  });
+}
 

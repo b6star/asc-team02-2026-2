@@ -2,7 +2,11 @@
   "version": 3,
   "file": "app.js",
   "sources": ["dashboard.js", "admin-ticket.js"],
-  "names": ["createExport", "shareExport", "attachmentId", "jobId"],
+  "sourcesContent": [
+    "const dashboard = document.querySelector('.dashboard-list');\n\nexport function initializeDashboard() {\n  return Boolean(dashboard);\n}\n",
+    "export async function createExport(attachmentId) {\n  return fetch(`/api/admin/attachments/${attachmentId}/exports`, {\n    method: 'POST',\n  });\n}\n\nexport async function shareExport(jobId) {\n  return fetch(`/api/admin/exports/${jobId}/share`, {\n    method: 'POST',\n    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },\n    body: 'enabled=true',\n  });\n}\n"
+  ],
+  "names": ["initializeDashboard", "createExport", "shareExport", "attachmentId", "jobId"],
   "mappings": ""
 }
 

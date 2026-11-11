@@ -173,4 +173,4 @@ SECRET_KEY=local-development-secret
 ADMIN_BOT_TOKEN=local-admin-bot-token
 ```
 
-실제 운영 환경에 배포하기 위한 값이 아니며, 이 서버는 외부 인터넷에 공개하지 않는 것을 권장합니다.
+이 저장소에 포함된 계정 정보, 토큰 및 키는 취약점 실습을 위해 만든 예시 값입니다.
